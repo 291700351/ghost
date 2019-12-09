@@ -1,16 +1,24 @@
 version: "3.5"
 
+# 持久化数据
 volumes: 
     mysql-data:
 
+# 服务编排，以services申明，在下面可以申明很多容器节点
 services: 
+    # mysql容器节点
     mysql:
+        # 设置容器名称
         container_name: mysql
+        # 构建容器的路径（当前文件夹下的mysql文件，里面必须包含Dockerfile文件），也可以使用image直接从镜像进行构建
         build: ./mysql
         restart: always
         privileged: true
+        # mysql8登录策略
         command: --default-authentication-plugin=mysql_native_password
+        # 将容器端口映射到本地，这是一个数组，可以映射多个端口
         ports: 
             - 3306:3306
+        # 目录映射，将本地目录映射到容器目录，这里使用上面定义的mysql-data数据卷
         volumes: 
             - mysql-data:/var/lib/mysql
